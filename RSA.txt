@@ -1,0 +1,199 @@
+#include "stdafx.h"
+#include <iostream>
+#include <string>
+#include <cmath>
+using namespace std;
+
+string mas;
+int P = 0, Q = 0, N = 0, Fn = 0, E = 0;
+int multiplik=0,D=0;
+long  *masC = new  long[size(mas)];
+
+int ProstoeLi(int x)
+{
+	int c = 0;
+	for (int i=2;i<x-1;i++)
+	{
+		if (!(x%i))// если выражение в скобках не истина(т.е. равно нулю) когда число делится на i без остатка увеличивается счетчик. У простого числа счетчик не увеличится ниразу.
+		{
+			c++;
+		}
+	}
+	return c;
+}
+
+int HOD(int x, int y)// функция нахождения НОД
+{
+	while (x != y)
+	{
+		if (x > y)
+			x = x - y;
+		else
+			y = y - x;
+	}
+	return x;
+}
+
+void generacKEY()
+{
+	cout << "vvedite 2 prostbIx chisla(snachala P,zatem Q):" << endl;
+P1://///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////P1
+	cout << "P=";
+	cin >> P;
+	if (!(ProstoeLi(P)))// если функция вернула нуль,т.е. счетчик не увеличился-число простое.
+	{
+		cout << "prin9to" << endl;
+	}
+	else
+	{
+
+		cout << "chislo ne prostoe" << endl;
+		goto P1;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////P1
+	}
+
+P2:////////////////////////////////////////////////////////////////////////////////////////////P2
+	cout << "Q=";
+	cin >> Q;
+	if (!(ProstoeLi(Q)))// если функция вернула нуль,т.е. счетчик не увеличился-число простое.
+	{
+		cout << "prin9to" << endl;
+	}
+	else
+	{
+		cout << "chislo ne prostoe" << endl;
+		goto P2;///////////////////////////////////////////////////////////////////////////////////P2
+	}
+	N = P*Q;
+	cout << "N=" << N << endl;
+	Fn = (P - 1)*(Q - 1);
+	cout << "F(N)=" << Fn << endl;
+	cout << "Vibirite chislo E,takoe chto 1 < E < F(N) i HOD(E,F(N))=1 ::";
+E1://////////////////////////////////////////////////////////////////////////////////////////E1
+	cin >> E;
+	if (HOD(E, Fn) == 1)
+	{
+		cout << "prin9to" << endl;
+	}
+	else
+	{
+		cout << "chisla ne vzaimo prostbIe,poprobuyte eshe raz:";
+		goto E1;//////////////////////////////////////////////////////////////////////////////////E1
+	}
+	cout << "E=" << E << endl;
+
+	/////////////////////////////////////////////// сразу найдем мультипликативно обратное(D) к R(E) по модулю Q (Fn)
+	int A = 1, R1 = 0, C = Fn;// значения столбиков предыдущие
+	int Ai = 0, R1i = 1, Ci = E;// значения столбиков текущие
+	int DEL = C / Ci, MO = C%Ci;
+	int An, R1n;
+	while (MO != 1)
+	{
+		An = A - Ai*DEL;//////////
+		A = Ai;
+		Ai = An;
+		R1n = R1 - R1i*DEL;//////////
+		R1 = R1i;
+		R1i = R1n;
+		C = Ci;//////
+		Ci = MO;//////
+		DEL = C / Ci;
+		MO = C%Ci;
+
+	}
+	An = A - Ai*DEL;//////////
+	R1n = R1 - R1i*DEL;//////////
+					   /////////////..поиски закончены далее только проверка и распечатка
+	cout << An << " ; " << R1n << endl;
+
+	if ((E*R1n + An*Fn) == 1)
+	{
+		multiplik = R1n;
+	}
+	else
+	{
+		if ((E*An + R1n*Fn) == 1)
+		{
+			multiplik = An;
+		}
+		else
+		{
+			if ((E*(-R1n) + An*Fn) == 1)
+			{
+				multiplik = -R1n;
+			}
+			else
+			{
+				if ((E*(-An) + R1n*Fn) == 1)
+				{
+					multiplik = -An;
+				}
+			}
+		}
+
+	}
+	D = multiplik;
+	if (D < 0)
+	{
+		D = Fn + D;
+	}
+	cout << "multiplikativno obratnoe chislo(D) k E po modF(N)=" << endl << "D=" << D << endl;
+	//////////////////////////////////////////////////////////////// поиски мультипликативно обратного числа окончены
+	cout << "itak,poluchena para kluchei:" << endl;
+	cout << "para (E=" << E << ",N=" << N << ") - open key" << endl;
+	cout << "para (D=" << D << ",N=" << N << ") - close key" << endl;
+}
+
+void shifr()
+{
+	for (int m = 0; m < size(mas); m++)
+	{
+		masC[m] = (int)mas[m];
+		int K = (int)mas[m];
+		for (int i = 1; i < E; i++)
+		{
+			masC[m] = (masC[m] *K )% N;
+		}
+	}
+	cout << "shifr slova:  ";
+	for (int i = 0; i < size(mas); i++)
+	{
+		cout<<masC[i]<<" ";
+	}
+	cout << endl;
+}
+
+void rasshifr()
+{
+	 long  *masD = new long [size(mas)];
+	for (int m = 0; m < size(mas); m++)
+	{
+		masD[m] = (int)masC[m];
+		int K = (int)masC[m];
+		for (int i = 1; i < D; i++)
+		{
+			masD[m] = (masD[m] * K) % N;
+		}
+	}
+
+	cout << "rasshifr slova:  ";
+	for (int i = 0; i < size(mas); i++)
+	{
+		cout << masD[i] << " ";
+	}
+	cout << endl;
+	for (int i = 0; i < size(mas); i++)
+	{
+		cout << (char)masD[i];
+	}
+	cout << endl;
+}
+
+int main()
+{
+	generacKEY();
+	cout << endl << "teperb vvedite slovo,kotoroe xotite zashifrovatb:";
+	cin >> mas;
+	shifr();
+	cout << "rasshifrovka:";
+	rasshifr();
+    return 0;
